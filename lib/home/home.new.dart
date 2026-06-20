@@ -41,6 +41,13 @@ class _OpsiNavigasiState extends State<OpsiNavigasi> with SingleTickerProviderSt
   late TabController tabController;
   final scrollController = ScrollController();
 
+
+  @override
+  void initState() {
+    tabController = TabController(length: 3, vsync: this);
+    super.initState();
+  }
+
   @override
   void dispose() {
     tabController.dispose();
