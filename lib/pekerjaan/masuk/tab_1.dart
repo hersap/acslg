@@ -58,6 +58,7 @@ class _Tab1Menu extends State<Tab1masuk> {
     _searchResult.clear();
     listLaporan.clear();
     listProses.clear();
+    proses = false;
     await getAllLaporan();
     setState(() {});
   }
@@ -108,6 +109,8 @@ class _Tab1Menu extends State<Tab1masuk> {
   }
 
   Future prosesPekerjaanP3(nolap) async {
+    loadingAlert("Memproses laporan...");
+
     if (permintaanKlaim) {
       if (alasanTolak.text.isEmpty) {
         return await warnAlert(text: 'Harus mengisi alasan menolak permintaan garansi!');
@@ -131,7 +134,11 @@ class _Tab1Menu extends State<Tab1masuk> {
           garansi = false;
           permintaanKlaim = false;
           alasanTolak.text = '';
-          return await successAlert(text: 'SPK telah berhasil dibuat!'); 
+          proses = true;
+          if (mounted) {
+            Navigator.of(context).pop();
+          }
+          await successAlert(text: 'Laporan berhasil diproses!');
         }
       } 
       
@@ -543,7 +550,9 @@ class _Tab1Menu extends State<Tab1masuk> {
                     onPressed: () async {
                       garansi = true;
                       permintaanKlaim = true;
+                      Navigator.of(context).pop();
                       await prosesPekerjaanP3(datalaporan[int.parse(index)].nomor);
+                      refresh();
                     }, 
                     child: const Text('Terima Garansi & Proses', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
                   ),
@@ -569,6 +578,7 @@ class _Tab1Menu extends State<Tab1masuk> {
                 onPressed: () async {
                   Navigator.of(context).pop();
                   await prosesPekerjaanP3(datalaporan[int.parse(index)].nomor);
+                  refresh();
                 }, 
                 child: const Text('Proses Laporan', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
               ),
