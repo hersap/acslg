@@ -109,9 +109,30 @@ class _Tab1Menu extends State<Tab1masuk> {
   }
 
   Future prosesPekerjaanP3(nolap) async {
-    loadingAlert("Memproses laporan...");
+    dynamic loadingcontext;
 
-    if (permintaanKlaim) {
+    QuickAlert.show(
+      barrierDismissible: false,
+      context: context,
+      type: QuickAlertType.loading,
+      widget: StatefulBuilder(
+        builder: (BuildContext context, StateSetter dialogSetState) {
+          loadingcontext = context;
+          return Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Text(
+              "Memproses laporan...",
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          );
+        },
+      ),
+    );
+
+ 
+
+    if (permintaanKlaim && !garansi) {
       if (alasanTolak.text.isEmpty) {
         return await warnAlert(text: 'Harus mengisi alasan menolak permintaan garansi!');
       }
@@ -134,10 +155,8 @@ class _Tab1Menu extends State<Tab1masuk> {
           garansi = false;
           permintaanKlaim = false;
           alasanTolak.text = '';
-          proses = true;
-          if (mounted) {
-            Navigator.of(context).pop();
-          }
+          proses = true;  
+          Navigator.of(loadingcontext).pop();
           await successAlert(text: 'Laporan berhasil diproses!');
         }
       } 
@@ -506,7 +525,7 @@ class _Tab1Menu extends State<Tab1masuk> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(height: 25, width: 100, child: Text('Status Garansi')),
+                            SizedBox(height: 25, width: 100, child: Text('Status')),
                             SizedBox(height: 25, width: 10, child: Text(':')),
                           ],
                         ),
@@ -519,7 +538,7 @@ class _Tab1Menu extends State<Tab1masuk> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text('Menuggu Keputusan'),
+                            child: Text('Menuggu Keputusan Garansi'),
                           ),
                         ),
                       ],
@@ -699,16 +718,6 @@ class _Tab1Menu extends State<Tab1masuk> {
     );
   }
 
-
-  Future <void> loadingAlert(String text) {
-    return QuickAlert.show(
-      barrierDismissible: false,
-      context: context,
-      type: QuickAlertType.loading,
-      text: text,
-    );
-  }
-  
 
   Widget showLoading() {
       return Center(

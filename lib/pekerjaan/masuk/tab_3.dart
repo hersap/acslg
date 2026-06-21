@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:acslg/form/form_update_proses.dart';
+import 'package:acslg/form/service_report.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:iconsax/iconsax.dart';
@@ -159,7 +159,7 @@ class _Tab1Menu extends State<Tab3masuk> {
           ),
         ),
         body: listLaporan.isEmpty
-        ? isLoading ? showLoading() : Center(child: Text('Tidak ada laporan proses'))
+        ? isLoading ? showLoading() : Center(child: Text('Tidak ada laporan proses observasi'))
         :
         searchLaporan.text.isNotEmpty
         ? cariLaporan()
@@ -205,9 +205,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      color: _searchResult[index].sumber=="Ruangan" ? Color.fromARGB(255, 54, 53, 51) 
-                            : _searchResult[index].sumber=="Inspeksi" ? Color.fromARGB(255, 117, 147, 202) 
-                            : _searchResult[index].sumber=="Pemeliharaan" ?  Color.fromARGB(255, 72, 180, 95) : Colors.black,
+                      color: Color.fromARGB(255, 54, 53, 51),
                       child: 
                         IntrinsicHeight(
                           child: Row(
@@ -227,65 +225,6 @@ class _Tab1Menu extends State<Tab3masuk> {
                                 ]
                               )
                             ),
-                            if (_searchResult[index].statusProses == 'Rekanan')
-                            _searchResult[index].statusp3 == '0' ?
-                            Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                            )
-                            :
-                            _searchResult[index].statusp3 == '1' ?
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.handyman_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                ),
-                              ],
-                            )
-                            : _searchResult[index].statusp3 == '2' ?
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.handyman_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.timer_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                ),
-                              ],
-                            )
-                            : _searchResult[index].statusp3 == '3' ?
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.handyman_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.timer_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.inventory_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                ),
-                              ],
-                            )
-                            : SizedBox()
                           ],
                           ),
                         ),
@@ -298,7 +237,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                       ),
                   ],
                 ),
-                if (_searchResult[index].jenislaporan == 'AC' && _searchResult[index].garansi != '0')
+                if (_searchResult[index].jenislaporan == 'AC' && _searchResult[index].garansi == '2')
                 Column(
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height*0.02),
@@ -306,12 +245,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                       children: [
                         SizedBox(width: MediaQuery.of(context).size.width*0.75),
                         SizedBox(
-                          child: Image.asset( _searchResult[index].garansi == '1' ? 
-                                'assets/garansi_proses.png' : 
-                                _searchResult[index].garansi == '-1' ? 
-                                'assets/garansi_reject.png' :
-                                _searchResult[index].garansi == '2' ?
-                                'assets/garansi_acc.png' : '',
+                          child: Image.asset('assets/garansi.png',
                             width: MediaQuery.of(context).size.width*0.15,
                             height: MediaQuery.of(context).size.width*0.15,
                             fit: BoxFit.cover, // Controls how the image fills its bounding box
@@ -366,9 +300,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        color: listLaporan[index].sumber=="Ruangan" ? Color.fromARGB(255, 54, 53, 51) 
-                            : listLaporan[index].sumber=="Inspeksi" ? Color.fromARGB(255, 117, 147, 202) 
-                            : listLaporan[index].sumber=="Pemeliharaan" ?  Color.fromARGB(255, 72, 180, 95) : Colors.black,
+                        color:Color.fromARGB(255, 54, 53, 51),
                         child: 
                           IntrinsicHeight(
                             child: Row(
@@ -388,65 +320,10 @@ class _Tab1Menu extends State<Tab3masuk> {
                                     ]
                                   )
                                 ),
-                                if (listLaporan[index].statusProses == 'Rekanan')
-                                listLaporan[index].statusp3 == '0' ?
                                 Padding(
                                   padding: EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
+                                  child: Icon(Icons.upload_file_outlined, color: Color.fromARGB(255, 230, 245, 20),),
                                 )
-                                :
-                                listLaporan[index].statusp3 == '1' ?
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.handyman_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                    ),
-                                  ],
-                                )
-                                : listLaporan[index].statusp3 == '2' ?
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.handyman_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.timer_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                    ),
-                                  ],
-                                )
-                                : listLaporan[index].statusp3 == '3' ?
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.badge_outlined, color: Color.fromARGB(255, 230, 245, 20),),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.handyman_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.timer_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(Icons.inventory_outlined, color: Color.fromARGB(255, 230, 245, 20))
-                                    ),
-                                  ],
-                                )
-                                : SizedBox()
                               ],
                             ),
                           ),
@@ -459,7 +336,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                       ),
                     ],
                   ),
-                  if (listLaporan[index].jenislaporan == 'AC' && listLaporan[index].garansi != '0')
+                  if (listLaporan[index].jenislaporan == 'AC' && listLaporan[index].garansi == '2')
                   Column(
                     children: [
                       SizedBox(height: MediaQuery.of(context).size.height*0.02),
@@ -467,12 +344,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                         children: [
                           SizedBox(width: MediaQuery.of(context).size.width*0.75),
                           SizedBox(
-                            child: Image.asset( listLaporan[index].garansi == '1' ? 
-                                'assets/garansi_proses.png' : 
-                                listLaporan[index].garansi == '-1' ? 
-                                'assets/garansi_reject.png' :
-                                listLaporan[index].garansi == '2' ?
-                                'assets/garansi_acc.png' : '',
+                            child: Image.asset('assets/garansi.png',
                               width: MediaQuery.of(context).size.width*0.15,
                               height: MediaQuery.of(context).size.width*0.15,
                               fit: BoxFit.cover, // Controls how the image fills its bounding box
@@ -587,28 +459,29 @@ class _Tab1Menu extends State<Tab3masuk> {
                         child: Text(rekom, textAlign: TextAlign.left,),
                       ),
                     ),
-                    if (datalaporan[int.parse(index)].jenislaporan == "AC" && datalaporan[int.parse(index)].garansi != "0")
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    if (datalaporan[int.parse(index)].jenislaporan == "AC" && datalaporan[int.parse(index)].garansi == "2")
+                    Column(
                       children: [
-                        SizedBox(height: 25, width: 100, child: Text('Status Garansi')),
-                        SizedBox(height: 25, width: 10, child: Text(':')),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 25, width: 100, child: Text('Status')),
+                            SizedBox(height: 25, width: 10, child: Text(':')),
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey
+                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Garansi'),
+                          ),
+                        ),
                       ],
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey
-                        ),
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(datalaporan[int.parse(index)].garansi != "1" ? 'Proses Klaim akan di cek oleh rekanan' :
-                          datalaporan[int.parse(index)].garansi != "-1" ? 'Klaim ditolak karena ${detailproses[0].keterangan}' :
-                          datalaporan[int.parse(index)].garansi != "2" ? 'Klaim Diterima' : ''
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -625,6 +498,7 @@ class _Tab1Menu extends State<Tab3masuk> {
               const SizedBox(
                 width: 20,
               ),
+              datalaporan[int.parse(index)].statusp3 == '2' ?
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
@@ -637,8 +511,19 @@ class _Tab1Menu extends State<Tab3masuk> {
                     MaterialPageRoute(builder: (context) => UpdateSPKForm(datalapsend: datalaporan[int.parse(index)], dataproses: detailproses[0]))
                   );
                 }, 
-                child: const Text('Proses Laporan', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
-              ),
+                child: const Text('Buat Service Report', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+              )
+              : 
+              datalaporan[int.parse(index)].statusp3 == '3' ?
+              Container(
+                height: MediaQuery.of(context).size.height*0.05,
+                width: MediaQuery.of(context).size.width*0.46,
+                decoration: BoxDecoration(
+                  border: Border.all()
+                ),
+                child: Center(child: Text("PROSES CEK IPS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+              )
+              : SizedBox()
               ]
             )
           ],
