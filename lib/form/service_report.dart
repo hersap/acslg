@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:acslg/form/sign/signature.dart';
+import 'package:acslg/home/home.new.dart';
 import 'package:acslg/pekerjaan/masuk/tab_3.dart';
 import 'package:dio/dio.dart';
 
@@ -82,6 +83,7 @@ class _UpdateSPKFormState extends State<UpdateSPKForm> {
         'tindakan' : tindakan.text,
         'evaluasi' : evaluasi.text,
         'rekomendasi' : rekomendasi.text,
+        'teknisi' : teknisi.text,
       }).timeout(Duration(seconds: 10), onTimeout: (){ return http.Response('Error: Timeout', 408); });
 
       if (response.body == '1'){
@@ -510,7 +512,6 @@ Future pickCameraImage() async {
     setState(() {
       signImage = file;
       signShow = File(file.path).readAsBytesSync();
-      selectedImage.add(file);
     });
     
   }
@@ -523,12 +524,9 @@ Future pickCameraImage() async {
           builder: (BuildContext context, setStateB) {
             return AlertDialog(
             //title: const Center(child: Text('Konfirmasi User')),
-            content: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey
-              ),
+            content: SizedBox(
               width: 200,
-              height: 200,
+              height: 100,
               child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -541,49 +539,47 @@ Future pickCameraImage() async {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  hintText: "User/Penerima Pekerjaan"
+                  hintText: "Nama Teknisi"
                 )
               ),
               //widget.datalapsend.sumber == "Ruangan" ?
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child :
-                    signImage != null
-                    ? Container(
-                      height: 130,
-                      decoration: BoxDecoration(border: Border.all()),
-                      child: Image(image: MemoryImage(signShow!)))
-                    :
-                      InkWell(
-                        onTap: () async {
-                          await getSign();
-                          setStateB((){});
-                        },
-                        child: Container(
-                        height: 130,
-                        decoration: BoxDecoration(
-                          border: Border.all()
-                        ),
-                        child: const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Iconsax.pen_add),
-                              Text('Tambahkan TTD')
-                            ],
-                          ),
-                        )
-                      ),
-                    ),
-                  )//:SizedBox()
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child :
+              //       signImage != null
+              //       ? Container(
+              //         height: 130,
+              //         decoration: BoxDecoration(border: Border.all()),
+              //         child: Image(image: MemoryImage(signShow!)))
+              //       :
+              //         InkWell(
+              //           onTap: () async {
+              //             await getSign();
+              //             setStateB((){});
+              //           },
+              //           child: Container(
+              //           height: 130,
+              //           decoration: BoxDecoration(
+              //             border: Border.all()
+              //           ),
+              //           child: const Center(
+              //             child: Column(
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 Icon(Iconsax.pen_add),
+              //                 Text('Tambahkan TTD')
+              //               ],
+              //             ),
+              //           )
+              //         ),
+              //       ),
+              //     )//:SizedBox()
+                TextButton(onPressed: () async {
+                Navigator.pop(context, true);
+                }, style: TextButton.styleFrom(backgroundColor: Colors.yellowAccent), child: const Text('Konfirmasi'))
                 ]
               ),
             ),
-            actions: <Widget>[
-              TextButton(onPressed: () async {
-                Navigator.pop(context, true);
-              }, style: TextButton.styleFrom(backgroundColor: Colors.yellowAccent), child: const Text('Konfirmasi'))
-            ],
           );
         }
       );
@@ -624,7 +620,7 @@ Future pickCameraImage() async {
     loadingAlert('$_statusMessage\n${(_uploadProgress * 100).toStringAsFixed(0)}% Terunggah',);
     
     if (!uploaded) {
-      selectedImage.add(signImage!);
+      //selectedImage.add(signImage!);
       
       await _uploadMultipleImages();
       if (uploaded) {
@@ -641,10 +637,10 @@ Future pickCameraImage() async {
     }
 
     if (spk && uploaded) {
-      if (await _tempDirectory!.exists()) {
-        // recursive: true deletes all files and sub-folders inside
-        await _tempDirectory!.delete(recursive: true);
-      }
+      // if (await _tempDirectory!.exists()) {
+      //   // recursive: true deletes all files and sub-folders inside
+      //   await _tempDirectory!.delete(recursive: true);
+      // }
       await successAlert(text: 'Service report berhasil dikirim!');
       spk = false;
       uploaded = false;
@@ -667,9 +663,9 @@ Future pickCameraImage() async {
 
     try {
       FormData formData = FormData.fromMap({
-        "ttd" : "yes",
+        "ttd" : "none",
         "jenis" : "laporan",
-        "status" : "proses",
+        "status" : "selesai",
         "nospk" : widget.dataproses.nomorspk,
       });
 
@@ -721,7 +717,7 @@ Future<void> successAlert({String text = ''}) {
     return QuickAlert.show(
       onConfirmBtnTap: () {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) => const Tab3masuk()), (Route route) => false);
+          builder: (context) => const OpsiNavigasi(opsi: 0, index: 2,)), (Route route) => false);
       },
       context: context,
       type: QuickAlertType.success,

@@ -20,7 +20,7 @@ class NavBar extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Interphases'),
-      home: const OpsiNavigasi(opsi: 0),
+      home: const OpsiNavigasi(opsi: 0, index: 0),
     );
   }
 }
@@ -29,8 +29,9 @@ int jobdesk = 0;
 int scrollWheelPos = 0;
 
 class OpsiNavigasi extends StatefulWidget {
-  const OpsiNavigasi({super.key, required this.opsi});
+  const OpsiNavigasi({super.key, required this.opsi, required this.index});
   final int opsi;
+  final int index;
 
   @override
   State<StatefulWidget> createState() => _OpsiNavigasiState();
@@ -38,6 +39,7 @@ class OpsiNavigasi extends StatefulWidget {
 
 class _OpsiNavigasiState extends State<OpsiNavigasi> with SingleTickerProviderStateMixin {
   late int halIndex = widget.opsi;
+  late int tabIndex = widget.index;
   late TabController tabController;
   final scrollController = ScrollController();
 
@@ -56,6 +58,7 @@ class _OpsiNavigasiState extends State<OpsiNavigasi> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    tabController.index = tabIndex;
     return Scaffold(
       appBar: AppBar(
         title: const Text(

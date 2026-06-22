@@ -320,6 +320,7 @@ class _Tab1Menu extends State<Tab3masuk> {
                                     ]
                                   )
                                 ),
+                                if (listLaporan[index].statusp3 == "3")
                                 Padding(
                                   padding: EdgeInsets.only(right: 10),
                                   child: Icon(Icons.upload_file_outlined, color: Color.fromARGB(255, 230, 245, 20),),
