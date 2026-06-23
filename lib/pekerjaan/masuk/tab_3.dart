@@ -152,6 +152,7 @@ class _Tab1Menu extends State<Tab3masuk> {
     return RefreshIndicator(
       onRefresh: refresh,
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
@@ -649,7 +650,7 @@ class _Tab1Menu extends State<Tab3masuk> {
               Center(
                 child: ElevatedButton(onPressed: () async {
                   Navigator.of(context).pop();
-                  await prosesPekerjaanP3(nolap, tambahanTindakan);
+                  await prosesPekerjaanP3(nolap, tambahanTindakan.text);
                   refresh();
                 }, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text('Konfirmasi', style: TextStyle(color: Colors.black),)),
               )
@@ -692,9 +693,6 @@ class _Tab1Menu extends State<Tab3masuk> {
 
   Future<void> successAlert({String text = ''}) {
     return QuickAlert.show(
-      onConfirmBtnTap: () {
-        Navigator.of(context).pop();
-      },
       context: context,
       type: QuickAlertType.success,
       text: text,
@@ -703,9 +701,6 @@ class _Tab1Menu extends State<Tab3masuk> {
 
   Future<void> failAlert({String text = ''}) {
     return QuickAlert.show(
-      onConfirmBtnTap: () {
-        Navigator.of(context).pop();
-      },
       context: context,
       type: QuickAlertType.error,
       text: text,
@@ -714,9 +709,6 @@ class _Tab1Menu extends State<Tab3masuk> {
 
   Future<void> warnAlert({String text = ''}) {
     return QuickAlert.show(
-      onConfirmBtnTap: () {
-        Navigator.of(context).pop();
-      },
       context: context,
       type: QuickAlertType.warning,
       text: text,
