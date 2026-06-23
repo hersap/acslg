@@ -43,3 +43,4 @@ flutter:
   assets:
     - assets/garansi.png
     - assets/garansi_klaim.png
+    - assets/cek_ulang.png

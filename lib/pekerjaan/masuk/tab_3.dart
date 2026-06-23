@@ -36,6 +36,7 @@ class _Tab1Menu extends State<Tab3masuk> {
   final TextEditingController namaPelaporController = TextEditingController();
   final TextEditingController detailLaporanController = TextEditingController();
   final TextEditingController searchLaporan = TextEditingController();
+  final TextEditingController tambahanTindakan = TextEditingController();
   bool isLoading = false;
   bool data = false;
   int result = 0;
@@ -100,6 +101,30 @@ class _Tab1Menu extends State<Tab3masuk> {
       });
       }
     } 
+  }
+
+  Future prosesPekerjaanP3(nolap, ket) async {
+    String uri = "https://ipsrsslg.my.id/ipscrud/p3AC/updatePekerjaanP3.php";
+    
+    
+    try {
+      final response = await http.post(Uri.parse(uri), body: {
+        'jenis' : 'revtry',
+        'nolap' : nolap,
+        'alasan' : ket,
+      }).timeout(Duration(seconds: 10), onTimeout: (){ return http.Response('Error: Timeout', 408); });
+      
+      if (response.statusCode == 200) {
+        if (response.body == '1'){
+          return await successAlert(text: 'Konfirmasi ulang terkirim ke IPS!'); 
+        }
+      } 
+      
+    } on TimeoutException catch(_) { 
+      return await failAlert(text: 'Connection Timeout!');
+    } catch (e) {
+      await failAlert(text: '$e');
+    }
   }
 
   Future<void> ambilData () async {
@@ -254,6 +279,24 @@ class _Tab1Menu extends State<Tab3masuk> {
                       ],
                     ),
                   ],
+                ),
+                if (_searchResult[index].jenislaporan == 'AC' && _searchResult[index].statusp3 == '-1')
+                Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height*0.02),
+                    Row(
+                      children: [
+                        SizedBox(width: MediaQuery.of(context).size.width*0.75),
+                        SizedBox(
+                          child: Image.asset('assets/cek_ulang.png',
+                            width: MediaQuery.of(context).size.width*0.15,
+                            height: MediaQuery.of(context).size.width*0.15,
+                            fit: BoxFit.cover, // Controls how the image fills its bounding box
+                          )
+                        )
+                      ],
+                    ),
+                  ],
                 )
                 ]
               ),
@@ -354,7 +397,25 @@ class _Tab1Menu extends State<Tab3masuk> {
                         ],
                       ),
                     ],
-                  )
+                  ),
+                  if (listLaporan[index].jenislaporan == 'AC' && listLaporan[index].statusp3 == '-1')
+                Column(
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.height*0.02),
+                    Row(
+                      children: [
+                        SizedBox(width: MediaQuery.of(context).size.width*0.75),
+                        SizedBox(
+                          child: Image.asset('assets/cek_ulang.png',
+                            width: MediaQuery.of(context).size.width*0.15,
+                            height: MediaQuery.of(context).size.width*0.15,
+                            fit: BoxFit.cover, // Controls how the image fills its bounding box
+                          )
+                        )
+                      ],
+                    ),
+                  ],
+                )
                   ],
                 ),
             ),
@@ -524,12 +585,79 @@ class _Tab1Menu extends State<Tab3masuk> {
                 ),
                 child: Center(child: Text("PROSES CEK IPS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
               )
-              : SizedBox()
+              :
+              datalaporan[int.parse(index)].statusp3 == '-1' ?
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                  backgroundColor: const Color.fromARGB(255, 0, 0, 0)
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  konfirmUlang(datalaporan[int.parse(index)].nomor);
+                }, 
+                child: const Text('Konfirmasi Ulang', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+              ) : SizedBox()
               ]
             )
           ],
         );
       }
+    );
+  }
+
+  Future<void> konfirmUlang(nolap) async{
+    return showDialog(
+    context: context, 
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+          builder: (BuildContext context, setStateB) {
+            return AlertDialog(
+            //title: const Center(child: Text('Konfirmasi User')),
+            content: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.withAlpha(50),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Konfirmasi Ulang', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      SizedBox(height: 5),
+                      TextField(
+                        maxLines: null,
+                        controller: tambahanTindakan,
+                        style: TextStyle(fontSize: 12),
+                        decoration: InputDecoration(
+                          filled: false,
+                          contentPadding: const EdgeInsets.all(5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          hintText: "isi tambahan tindakan yang dilakukan"
+                        )
+                      ),
+                    ]
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              Center(
+                child: ElevatedButton(onPressed: () async {
+                  Navigator.of(context).pop();
+                  await prosesPekerjaanP3(nolap, tambahanTindakan);
+                  refresh();
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text('Konfirmasi', style: TextStyle(color: Colors.black),)),
+              )
+            ],
+          );
+        }
+      );
+    }
     );
   }
 
