@@ -37,28 +37,31 @@ class OpsiNavigasi extends StatefulWidget {
   State<StatefulWidget> createState() => _OpsiNavigasiState();
 }
 
-class _OpsiNavigasiState extends State<OpsiNavigasi> with SingleTickerProviderStateMixin {
+class _OpsiNavigasiState extends State<OpsiNavigasi> with TickerProviderStateMixin {
   late int halIndex = widget.opsi;
   late int tabIndex = widget.index;
   late TabController tabController;
+  late TabController tabController2;
   final scrollController = ScrollController();
 
 
   @override
   void initState() {
     tabController = TabController(length: 3, vsync: this);
+    tabController2 = TabController(length: 2, vsync: this);
+    tabController.index = tabIndex;
     super.initState();
   }
 
   @override
   void dispose() {
     tabController.dispose();
+    tabController2.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    tabController.index = tabIndex;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -164,7 +167,7 @@ class _OpsiNavigasiState extends State<OpsiNavigasi> with SingleTickerProviderSt
                   child: Column(
                     children: [
                       TabBar(
-                        controller: tabController,
+                        controller: tabController2,
                         indicatorColor: Colors.black,
                         labelColor: Colors.black,
                         tabs: const [
@@ -181,7 +184,7 @@ class _OpsiNavigasiState extends State<OpsiNavigasi> with SingleTickerProviderSt
                 ),
                 Expanded(
                   child: TabBarView(
-                    controller: tabController,
+                    controller: tabController2,
                     children: const [
                       Tab1selesai(),
                       Tab2selesai(),
