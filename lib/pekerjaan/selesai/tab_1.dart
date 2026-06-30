@@ -326,7 +326,7 @@ class _Tab1Menu extends State<Tab1selesai> {
                       ),
                   ],
                 ),
-                if (_searchResult[index].jenislaporan == 'AC' && _searchResult[index].garansi != '0')
+                if (_searchResult[index].jenislaporan == 'AC' && _searchResult[index].garansi == '2')
                 Column(
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height*0.02),
@@ -334,12 +334,8 @@ class _Tab1Menu extends State<Tab1selesai> {
                       children: [
                         SizedBox(width: MediaQuery.of(context).size.width*0.75),
                         SizedBox(
-                          child: Image.asset( _searchResult[index].garansi == '1' ? 
-                                'assets/garansi_proses.png' : 
-                                _searchResult[index].garansi == '-1' ? 
-                                'assets/garansi_reject.png' :
-                                _searchResult[index].garansi == '2' ?
-                                'assets/garansi_acc.png' : '',
+                          child: Image.asset( 
+                                'assets/garansi.png',
                             width: MediaQuery.of(context).size.width*0.15,
                             height: MediaQuery.of(context).size.width*0.15,
                             fit: BoxFit.cover, // Controls how the image fills its bounding box
@@ -487,7 +483,7 @@ class _Tab1Menu extends State<Tab1selesai> {
                       ),
                     ],
                   ),
-                  if (listLaporan[index].jenislaporan == 'AC' && listLaporan[index].garansi != '0')
+                  if (listLaporan[index].jenislaporan == 'AC' && listLaporan[index].garansi == '2')
                   Column(
                     children: [
                       SizedBox(height: MediaQuery.of(context).size.height*0.02),
@@ -495,12 +491,8 @@ class _Tab1Menu extends State<Tab1selesai> {
                         children: [
                           SizedBox(width: MediaQuery.of(context).size.width*0.75),
                           SizedBox(
-                            child: Image.asset( listLaporan[index].garansi == '1' ? 
-                                'assets/garansi_proses.png' : 
-                                listLaporan[index].garansi == '-1' ? 
-                                'assets/garansi_reject.png' :
-                                listLaporan[index].garansi == '2' ?
-                                'assets/garansi_acc.png' : '',
+                            child: Image.asset( 
+                                'assets/garansi.png',
                               width: MediaQuery.of(context).size.width*0.15,
                               height: MediaQuery.of(context).size.width*0.15,
                               fit: BoxFit.cover, // Controls how the image fills its bounding box
