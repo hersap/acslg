@@ -233,9 +233,7 @@ class _Tab1Menu extends State<Tab1selesai> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      color: _searchResult[index].sumber=="Ruangan" ? Color.fromARGB(255, 54, 53, 51) 
-                            : _searchResult[index].sumber=="Inspeksi" ? Color.fromARGB(255, 117, 147, 202) 
-                            : _searchResult[index].sumber=="Pemeliharaan" ?  Color.fromARGB(255, 72, 180, 95) : Colors.black,
+                      color:  Color.fromARGB(255, 117, 147, 202), 
                       child: 
                         IntrinsicHeight(
                           child: Row(
@@ -390,9 +388,7 @@ class _Tab1Menu extends State<Tab1selesai> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        color: listLaporan[index].sumber=="Ruangan" ? Color.fromARGB(255, 54, 53, 51) 
-                            : listLaporan[index].sumber=="Inspeksi" ? Color.fromARGB(255, 117, 147, 202) 
-                            : listLaporan[index].sumber=="Pemeliharaan" ?  Color.fromARGB(255, 72, 180, 95) : Colors.black,
+                        color:  Color.fromARGB(255, 117, 147, 202), 
                         child: 
                           IntrinsicHeight(
                             child: Row(

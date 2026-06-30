@@ -35,6 +35,7 @@ class _Tab1Menu extends State<Tab2masuk> {
   final TextEditingController namaPelaporController = TextEditingController();
   final TextEditingController detailLaporanController = TextEditingController();
   final TextEditingController searchLaporan = TextEditingController();
+  final TextEditingController keteranganbaru = TextEditingController();
   bool isLoading = false;
   bool data = false;
   int result = 0;
@@ -102,7 +103,7 @@ class _Tab1Menu extends State<Tab2masuk> {
     } 
   }
   
-  Future prosesPekerjaanP3(nolap) async {
+  Future prosesPekerjaanP3(nolap, jenis, keterangan) async {
     dynamic loadingcontext;
 
     QuickAlert.show(
@@ -128,8 +129,9 @@ class _Tab1Menu extends State<Tab2masuk> {
     
     try {
       final response = await http.post(Uri.parse(uri), body: {
-        'jenis' : 'observasi',
+        'jenis' : jenis,
         'nolap' : nolap,
+        'alasan' : keterangan,
       }).timeout(Duration(seconds: 10), onTimeout: (){ return http.Response('Error: Timeout', 408); });
       
       if (response.statusCode == 200) {
@@ -532,23 +534,94 @@ class _Tab1Menu extends State<Tab2masuk> {
               const SizedBox(
                 width: 20,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                  backgroundColor: const Color.fromARGB(255, 0, 0, 0)
-                ),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await prosesPekerjaanP3(datalaporan[int.parse(index)].nomor);
-                  refresh();
-                }, 
-                child: const Text('Observasi', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+              Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                      backgroundColor: const Color.fromARGB(255, 219, 223, 28)
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await keteranganBaru(datalaporan[int.parse(index)].nomor);
+                      refresh();
+                    }, 
+                    child: const Text('Update Keterangan', style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                      backgroundColor: const Color.fromARGB(255, 0, 0, 0)
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      await prosesPekerjaanP3(datalaporan[int.parse(index)].nomor, 'observasi', 'Observasi');
+                      refresh();
+                    }, 
+                    child: const Text('Observasi', style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),),
+                  ),
+                ],
               ),
               ]
             )
           ],
         );
       }
+    );
+  }
+
+  Future<void> keteranganBaru(nolap) async{
+    return showDialog(
+    context: context, 
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+          builder: (BuildContext context, setStateB) {
+            return AlertDialog(
+            //title: const Center(child: Text('Konfirmasi User')),
+            content: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.withAlpha(50),
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Update Status/Keterangan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      SizedBox(height: 5),
+                      TextField(
+                        maxLines: null,
+                        controller: keteranganbaru,
+                        style: TextStyle(fontSize: 12),
+                        decoration: InputDecoration(
+                          filled: false,
+                          contentPadding: const EdgeInsets.all(5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          hintText: "isi status/keterangan baru"
+                        )
+                      ),
+                    ]
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              Center(
+                child: ElevatedButton(onPressed: () async {
+                  Navigator.of(context).pop();
+                  await prosesPekerjaanP3(nolap, 'prosesUpdate', keteranganbaru.text);
+                  refresh();
+                }, style: ElevatedButton.styleFrom(backgroundColor: Colors.green), child: const Text('Konfirmasi', style: TextStyle(color: Colors.black),)),
+              )
+            ],
+          );
+        }
+      );
+    }
     );
   }
 
